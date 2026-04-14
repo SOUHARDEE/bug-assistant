@@ -1,97 +1,184 @@
-# AI Bug Reproduction Assistant (Streamlit)
+# 🐞 AI Bug Assistant
 
-A production-ready Streamlit web app that takes **error logs + code** and outputs:
+🚀 **Live App:** https://bug-assistant.streamlit.app/
 
-- Root cause analysis
-- Deterministic reproduction steps
-- Suggested fixes (with patch guidance)
-- A minimal test case to prevent regressions
+An intelligent AI-powered debugging assistant that analyzes error logs and code snippets to identify bugs, explain root causes, and suggest actionable fixes instantly.
 
-It uses a **local Ollama model** (default: `llama3`) and is designed for easy deployment (Docker or any container platform that can reach your Ollama host).
+---
 
-## Features
+## ✨ Features
 
-- **Clean UI**: structured input areas, settings sidebar, downloadable report
-- **Safety**: optional secret redaction for logs/code before sending to the model
-- **Reliability**: structured JSON output with schema validation + fallback parsing
-- **Modular**: `app.py` plus `utils/` modules for prompts, parsing, OpenAI client, UI helpers
+* 🔍 Analyze error logs and source code
+* 🧠 AI-generated root cause explanations
+* 🛠 Suggested fixes and improvements
+* ⚡ Fast inference using Groq API
+* 💻 Local support via Ollama (offline mode)
+* 🌐 Fully deployed using Streamlit Cloud
+* 📥 Downloadable analysis report
 
-## Quickstart (local)
+---
 
-1) Create and activate a virtual environment
+## 🏗️ Tech Stack
+
+* **Frontend:** Streamlit
+* **Backend:** Python
+* **AI Models:**
+
+  * ☁️ Cloud: `llama-3.3-70b-versatile` (Groq API)
+  * 💻 Local: `llama3` (Ollama)
+* **APIs:** Groq API
+* **Deployment:** Streamlit Cloud
+* **Other:** Requests, dotenv
+
+---
+
+## ⚙️ How It Works
+
+1. User inputs:
+
+   * Error logs
+   * Code snippet
+   * Optional context
+
+2. The system:
+
+   * Cleans and structures input
+   * Builds an AI prompt
+
+3. Routing:
+
+   * **Local environment → Ollama**
+   * **Cloud deployment → Groq API**
+
+4. Output:
+
+   * Root cause
+   * Explanation
+   * Suggested fix
+
+---
+
+## 🚀 Run Locally
+
+### 1️⃣ Clone Repository
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+git clone https://github.com/YOUR_USERNAME/bug-assistant.git
+cd bug-assistant
 ```
 
-2) Install dependencies
+### 2️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3) Ensure Ollama is running
+### 3️⃣ Setup Environment Variables
 
-- Install Ollama and pull the model:
+Create a `.env` file:
 
-```bash
-ollama pull llama3
+```env
+GROQ_API_KEY=your_api_key_here
 ```
 
-- Start Ollama (it typically listens on `http://localhost:11434`)
-
-4) Run the app
+### 4️⃣ Run Application
 
 ```bash
 streamlit run app.py
 ```
 
-## Configuration
+---
 
-Environment variables:
+## 🧠 Optional: Local AI (Ollama Mode)
 
-- `OLLAMA_BASE_URL` (optional, default: `http://localhost:11434`)
-- `OLLAMA_MODEL` (optional, default: `llama3`)
-
-You can also set these in Streamlit Community Cloud “Secrets” or a platform-specific secret manager.
-
-## Deployment
-
-### Streamlit Community Cloud
-
-- Push this repository to GitHub.
-- Ensure the deployed app can reach your Ollama host (not typical for Streamlit Cloud).
-- Deploy using `app.py`.
-
-### Docker
+1️⃣ Install Ollama
+2️⃣ Run model:
 
 ```bash
-docker build -t ai-bug-assistant .
-docker run -p 8501:8501 -e OLLAMA_BASE_URL="http://host.docker.internal:11434" -e OLLAMA_MODEL="llama3" ai-bug-assistant
+ollama run llama3
 ```
 
-## Project structure
+3️⃣ Set environment variable:
 
-```
-.
-├─ app.py
-├─ requirements.txt
-├─ Dockerfile
-├─ .streamlit/
-│  └─ config.toml
-├─ .env.example
-└─ utils/
-   ├─ __init__.py
-   ├─ ollama_client.py
-   ├─ prompting.py
-   ├─ parsing.py
-   ├─ redaction.py
-   ├─ report.py
-   └─ ui.py
+```bash
+export OLLAMA_BASE_URL=http://localhost:11434
 ```
 
-## Notes
+(Windows PowerShell)
 
-- This app is intended to generate *actionable engineering output*. Always validate suggested changes before applying them in production code.
+```powershell
+setx OLLAMA_BASE_URL "http://localhost:11434"
+```
 
+---
+
+## 🔐 Environment Variables
+
+| Variable         | Description           |
+| ---------------- | --------------------- |
+| GROQ_API_KEY     | Required for cloud AI |
+| OLLAMA_BASE_URL  | Optional (local mode) |
+| OLLAMA_MODEL     | Optional              |
+| OLLAMA_TIMEOUT_S | Optional              |
+
+---
+
+## 🌍 Deployment
+
+Deployed using **Streamlit Cloud**:
+
+1. Push code to GitHub
+2. Connect repository on Streamlit
+3. Add secrets:
+
+```toml
+GROQ_API_KEY="your_api_key"
+```
+
+4. Deploy 🚀
+
+---
+
+
+## 💡 Future Improvements
+
+* 📋 Copy-to-clipboard fixes
+* 🧾 Structured output sections (Root Cause / Fix / Code)
+* 🧪 Auto test case generation
+* 📊 Bug severity detection
+* 💬 Chat-based debugging interface
+* 🔁 Multi-turn debugging
+
+---
+
+## 🧠 Key Learnings
+
+* Hybrid AI architecture (Local + Cloud)
+* API error handling & fallback design
+* Deployment constraints (local vs cloud models)
+* Secure API key management
+* Real-world debugging workflows
+
+---
+
+## 👨‍💻 Author
+
+**Souhardee Sen**
+
+---
+
+## ⭐ Support
+
+If you found this useful:
+
+⭐ Star the repo
+🔁 Share with others
+🚀 Build on top of it
+
+---
+
+## 📌 Project Status
+
+✅ Fully Functional
+✅ Deployed
+✅ Production-ready (with hybrid AI support)
