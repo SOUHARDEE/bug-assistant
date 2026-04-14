@@ -56,7 +56,7 @@ def create_completion_json(
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": "llama3-8b-instant",
+                    "model": "llama-3.3-70b-versatile",
                     "messages": [
                         {"role": "system", "content": system_prompt.strip()},
                         {"role": "user", "content": user_prompt.strip()},
