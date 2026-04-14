@@ -20,8 +20,8 @@ def load_ollama_settings() -> OllamaSettings:
         timeout_s = 240.0
 
     return OllamaSettings(
-        base_url=os.getenv("OLLAMA_BASE_URL", "cloud"),  # 🔥 FIXED
-        model=os.getenv("OLLAMA_MODEL", "llama3"),       # 🔥 FIXED
+        base_url=os.getenv("OLLAMA_BASE_URL", "cloud"),  # cloud = Groq
+        model=os.getenv("OLLAMA_MODEL", "llama3"),
         timeout_s=timeout_s,
     )
 
@@ -40,7 +40,7 @@ def create_completion_json(
     prompt = f"{system_prompt.strip()}\n\n{user_prompt.strip()}".strip()
 
     # =========================================================
-    # 🔵 CLOUD MODE → GROQ API
+    # 🔵 CLOUD MODE → GROQ
     # =========================================================
     if "localhost" not in base_url:
         api_key = os.getenv("GROQ_API_KEY")
@@ -66,11 +66,27 @@ def create_completion_json(
                 timeout=60,
             )
 
-            data = response.json()
-            return data["choices"][0]["message"]["content"]
+            # ✅ SAFE PARSING (FIX)
+            try:
+                data = response.json()
+            except Exception:
+                return f"❌ Invalid JSON response: {response.text}"
+
+            # ✅ HANDLE API ERROR
+            if response.status_code != 200:
+                return f"❌ API Error {response.status_code}: {data}"
+
+            # ✅ FIX FOR 'choices' ERROR
+            if "choices" not in data:
+                return f"❌ Unexpected response: {data}"
+
+            try:
+                return data["choices"][0]["message"]["content"]
+            except Exception:
+                return f"❌ Parsing error: {data}"
 
         except Exception as e:
-            return f"❌ API error: {str(e)}"
+            return f"❌ API request failed: {str(e)}"
 
     # =========================================================
     # 🟢 LOCAL MODE → OLLAMA
@@ -91,7 +107,11 @@ def create_completion_json(
         if response.status_code != 200:
             return f"❌ Ollama error: {response.text}"
 
-        data = response.json()
+        try:
+            data = response.json()
+        except Exception:
+            return f"❌ Invalid Ollama response: {response.text}"
+
         result = str(data.get("response", "")).strip()
 
         if not result:
